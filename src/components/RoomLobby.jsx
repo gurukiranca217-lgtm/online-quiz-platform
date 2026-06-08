@@ -98,8 +98,13 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
         createdAt: serverTimestamp()
       });
     } catch (err) {
-      console.error(err);
-      setJoinError('Failed to create room in database. Please check your connection.');
+      console.error("Firebase Room Creation Error details:", {
+        code: err.code,
+        message: err.message,
+        name: err.name,
+        fullError: err
+      });
+      setJoinError(`Failed to create room in database: ${err.message || 'Check connection.'}`);
     }
   };
 
@@ -166,8 +171,13 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
       setPlayers(updatedPlayers);
       setLobbyView('lobby');
     } catch (err) {
-      console.error(err);
-      setJoinError('Connection error. Failed to join room.');
+      console.error("Firebase Join Room Error details:", {
+        code: err.code,
+        message: err.message,
+        name: err.name,
+        fullError: err
+      });
+      setJoinError(`Connection error. Failed to join room: ${err.message || 'Check connection.'}`);
     } finally {
       setIsConnecting(false);
     }
