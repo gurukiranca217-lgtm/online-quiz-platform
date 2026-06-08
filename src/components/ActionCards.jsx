@@ -51,8 +51,8 @@ export default function ActionCards({ activeCard, onSelectCard }) {
             onClick={() => onSelectCard(card.id)}
             className={`w-full text-left glass-panel rounded-2xl p-6 transition-all duration-300 relative overflow-hidden group cursor-pointer flex flex-col justify-between min-h-[190px] btn-active-scale ${
               isActive 
-                ? `${card.glowClass} border-transparent bg-slate-900/90` 
-                : `border-white/5 hover:bg-slate-800/40 hover:-translate-y-1 hover:scale-[1.025] ${card.hoverBorder}`
+                ? `${card.glowClass} border-transparent bg-theme-card-bg-active` 
+                : `border-theme-border hover:bg-theme-card-bg-hover hover:-translate-y-1 hover:scale-[1.025] ${card.hoverBorder}`
             }`}
           >
             {/* Ambient Background Glow for hover */}
@@ -62,18 +62,18 @@ export default function ActionCards({ activeCard, onSelectCard }) {
               {/* Card Header with Icon and Emoji */}
               <div className="flex justify-between items-center mb-4">
                 <span className="text-3xl">{card.emoji}</span>
-                <div className="p-2 rounded-xl bg-white/5 border border-white/10 group-hover:border-white/20 transition-colors">
+                <div className="p-2 rounded-xl bg-theme-glass-bg border border-theme-border group-hover:border-theme-border transition-colors">
                   {card.icon}
                 </div>
               </div>
 
               {/* Title */}
-              <h3 className="text-lg font-bold text-white group-hover:text-white/95 transition-colors mb-2">
+              <h3 className="text-lg font-bold text-theme-text-primary transition-colors mb-2">
                 {card.title}
               </h3>
 
               {/* Description */}
-              <p className="text-sm text-gray-400 leading-relaxed font-light group-hover:text-gray-350 transition-colors">
+              <p className="text-sm text-theme-text-secondary leading-relaxed font-light group-hover:text-theme-text-primary transition-colors">
                 {card.description}
               </p>
             </div>

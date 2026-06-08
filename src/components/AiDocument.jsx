@@ -560,22 +560,22 @@ export default function AiDocument({ onSave, onCancel }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-8 border border-white/5 relative overflow-hidden animate-modal-in">
+    <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-8 border border-theme-border relative overflow-hidden animate-modal-in">
       {/* Dynamic background lighting */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       {status === 'idle' && (
         <div>
-          <div className="flex justify-between items-center pb-6 border-b border-white/5 mb-8">
+          <div className="flex justify-between items-center pb-6 border-b border-theme-border mb-8">
             <div>
-              <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-2xl font-extrabold text-theme-text-primary tracking-tight flex items-center gap-2">
                 <span>🤖</span> AI Quiz from Document
               </h2>
-              <p className="text-sm text-gray-400 mt-1">Upload files and let AI construct trivia questions automatically.</p>
+              <p className="text-sm text-theme-text-muted mt-1">Upload files and let AI construct trivia questions automatically.</p>
             </div>
             <button
               onClick={onCancel}
-              className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-white transition-all cursor-pointer btn-active-scale"
+              className="p-2 rounded-xl bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
@@ -587,10 +587,10 @@ export default function AiDocument({ onSave, onCancel }) {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current.click()}
-            className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-300 mb-8 hover:scale-[1.015] hover:bg-gray-950/40 ${
+            className={`border-2 border-dashed rounded-2xl p-10 text-center cursor-pointer transition-all duration-300 mb-8 hover:scale-[1.015] hover:bg-theme-card-bg-hover ${
               isDragActive 
                 ? 'border-purple-500 bg-purple-500/5' 
-                : 'border-white/10 hover:border-white/20 bg-gray-950/20'
+                : 'border-theme-border hover:border-theme-border/60 bg-theme-input-bg/10'
             }`}
           >
             <input
@@ -601,23 +601,23 @@ export default function AiDocument({ onSave, onCancel }) {
               className="hidden"
             />
             <UploadCloud className="w-12 h-12 text-purple-400 mx-auto mb-4 animate-bounce" />
-            <h3 className="text-lg font-bold text-white mb-2">Drag and drop your file here</h3>
-            <p className="text-sm text-gray-400 max-w-sm mx-auto mb-1">
+            <h3 className="text-lg font-bold text-theme-text-primary mb-2">Drag and drop your file here</h3>
+            <p className="text-sm text-theme-text-secondary max-w-sm mx-auto mb-1">
               Supports PDF, DOCX, or TXT documents.
             </p>
-            <p className="text-xs text-gray-500">Max size 25MB</p>
+            <p className="text-xs text-theme-text-muted">Max size 25MB</p>
           </div>
 
           {/* Selected File Card */}
           {file && (
-            <div className="mb-8 flex items-center justify-between p-4 rounded-xl bg-gray-950 border border-white/5">
+            <div className="mb-8 flex items-center justify-between p-4 rounded-xl bg-theme-input-bg border border-theme-border">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <p className="text-sm font-semibold text-white truncate max-w-md">{file.name}</p>
-                  <p className="text-xs text-gray-400">{(file.size / 1024).toFixed(1)} KB</p>
+                  <p className="text-sm font-semibold text-theme-text-primary truncate max-w-md">{file.name}</p>
+                  <p className="text-xs text-theme-text-muted">{(file.size / 1024).toFixed(1)} KB</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -630,15 +630,15 @@ export default function AiDocument({ onSave, onCancel }) {
 
           {/* Difficulty Selector */}
           <div className="mb-8 text-left">
-            <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Select Quiz Difficulty</label>
+            <label className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-3">Select Quiz Difficulty</label>
             <div className="grid grid-cols-3 gap-4">
               <button
                 type="button"
                 onClick={() => setDifficulty('Easy')}
                 className={`py-3.5 rounded-xl border font-bold text-sm transition-all cursor-pointer text-center btn-active-scale ${
                   difficulty === 'Easy'
-                    ? 'bg-emerald-500/10 border-emerald-550 text-emerald-450 shadow-lg shadow-emerald-500/10'
-                    : 'bg-gray-950/40 border-white/5 text-gray-400 hover:bg-white/5 hover:border-white/10'
+                    ? 'bg-emerald-500/10 border-emerald-500 text-emerald-450 shadow-lg shadow-emerald-500/10'
+                    : 'bg-theme-input-bg/40 border-theme-border text-theme-text-muted hover:bg-theme-card-bg-hover hover:border-theme-border/60'
                 }`}
               >
                 🟢 Easy
@@ -649,7 +649,7 @@ export default function AiDocument({ onSave, onCancel }) {
                 className={`py-3.5 rounded-xl border font-bold text-sm transition-all cursor-pointer text-center btn-active-scale ${
                   difficulty === 'Medium'
                     ? 'bg-amber-500/10 border-amber-500 text-amber-400 shadow-lg shadow-amber-500/10'
-                    : 'bg-gray-950/40 border-white/5 text-gray-400 hover:bg-white/5 hover:border-white/10'
+                    : 'bg-theme-input-bg/40 border-theme-border text-theme-text-muted hover:bg-theme-card-bg-hover hover:border-theme-border/60'
                 }`}
               >
                 🟡 Medium
@@ -660,7 +660,7 @@ export default function AiDocument({ onSave, onCancel }) {
                 className={`py-3.5 rounded-xl border font-bold text-sm transition-all cursor-pointer text-center btn-active-scale ${
                   difficulty === 'Hard'
                     ? 'bg-rose-500/10 border-rose-500 text-rose-450 shadow-lg shadow-rose-500/10'
-                    : 'bg-gray-950/40 border-white/5 text-gray-450 hover:bg-white/5 hover:border-white/10'
+                    : 'bg-theme-input-bg/40 border-theme-border text-theme-text-muted hover:bg-theme-card-bg-hover hover:border-theme-border/60'
                 }`}
               >
                 🔴 Hard
@@ -669,10 +669,10 @@ export default function AiDocument({ onSave, onCancel }) {
           </div>
 
           {/* Action Trigger */}
-          <div className="flex justify-end gap-4 pt-6 border-t border-white/5">
+          <div className="flex justify-end gap-4 pt-6 border-t border-theme-border">
             <button
               onClick={onCancel}
-              className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-white transition-all cursor-pointer btn-active-scale"
+              className="px-5 py-3 rounded-xl bg-theme-glass-bg hover:bg-theme-card-bg-hover border border-theme-border text-sm font-semibold text-theme-text-primary transition-all cursor-pointer btn-active-scale"
             >
               Cancel
             </button>
@@ -696,10 +696,10 @@ export default function AiDocument({ onSave, onCancel }) {
             <Loader2 className="w-16 h-16 text-purple-500 animate-spin relative" />
           </div>
 
-          <h3 className="text-xl font-bold text-white mb-2">Analyzing Document ({difficulty})</h3>
-          <p className="text-sm text-gray-400 max-w-sm mb-6">Our simulated AI system is extracting core principles and generating multiple choice options.</p>
+          <h3 className="text-xl font-bold text-theme-text-primary mb-2">Analyzing Document ({difficulty})</h3>
+          <p className="text-sm text-theme-text-muted max-w-sm mb-6">Our simulated AI system is extracting core principles and generating multiple choice options.</p>
 
-          <div className="w-full max-w-md bg-gray-950/80 rounded-2xl p-4 border border-white/5 space-y-3">
+          <div className="w-full max-w-md bg-theme-input-bg/80 rounded-2xl p-4 border border-theme-border space-y-3">
             {loadingMessages.map((msg, idx) => {
               const isDone = loadingStep > idx;
               const isActive = loadingStep === idx;
@@ -711,8 +711,8 @@ export default function AiDocument({ onSave, onCancel }) {
                     isDone 
                       ? 'text-emerald-400' 
                       : isActive 
-                        ? 'text-white font-medium pulse-status' 
-                        : 'text-gray-650'
+                        ? 'text-theme-text-primary font-medium pulse-status' 
+                        : 'text-theme-text-muted/40'
                   }`}
                 >
                   <div className={`w-5 h-5 rounded-full flex items-center justify-center border text-xs ${
@@ -720,7 +720,7 @@ export default function AiDocument({ onSave, onCancel }) {
                       ? 'border-emerald-500 bg-emerald-500/10' 
                       : isActive 
                         ? 'border-purple-500 text-purple-400' 
-                        : 'border-gray-800'
+                        : 'border-theme-border'
                   }`}>
                     {isDone ? '✓' : idx + 1}
                   </div>

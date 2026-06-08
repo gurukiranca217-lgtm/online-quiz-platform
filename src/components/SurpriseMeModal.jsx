@@ -462,58 +462,58 @@ export default function SurpriseMeModal({ onGenerate, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-      <div className="relative w-full max-w-lg glass-panel rounded-3xl p-8 border border-white/10 overflow-hidden shadow-2xl animate-modal-in">
+      <div className="relative w-full max-w-lg glass-panel rounded-3xl p-8 border border-theme-border overflow-hidden shadow-2xl animate-modal-in">
         {/* Dynamic back decoration */}
         <div className="absolute -top-12 -right-12 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
         {loading ? (
           <div className="py-8 flex flex-col items-center justify-center text-center">
             <Loader2 className="w-12 h-12 text-amber-400 animate-spin mb-4" />
-            <h3 className="text-lg font-bold text-white mb-2">Generating Instant Quiz</h3>
-            <p className="text-sm text-gray-400 pulse-status">{loadingText}</p>
+            <h3 className="text-lg font-bold text-theme-text-primary mb-2">Generating Instant Quiz</h3>
+            <p className="text-sm text-theme-text-muted pulse-status">{loadingText}</p>
           </div>
         ) : (
           <div>
             {/* Header */}
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-extrabold text-white tracking-tight flex items-center gap-2 font-display">
+              <h3 className="text-xl font-extrabold text-theme-text-primary tracking-tight flex items-center gap-2 font-display">
                 <Sparkles className="w-5 h-5 text-amber-400" />
                 🎲 Surprise Me!
               </h3>
               <button
                 onClick={onClose}
-                className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-white transition-all cursor-pointer btn-active-scale"
+                className="p-1.5 rounded-lg bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <p className="text-sm text-gray-400 mb-6 leading-relaxed">
+            <p className="text-sm text-theme-text-secondary mb-6 leading-relaxed">
               Enter a custom topic or select one of our 10 premade categories below to instantly generate a 5-question quiz!
             </p>
 
             <form onSubmit={handleGenerate} className="space-y-6">
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Custom Topic</label>
+                <label className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-2">Custom Topic</label>
                 <input
                   type="text"
                   value={topic}
                   onChange={(e) => setTopic(e.target.value)}
                   placeholder="e.g. History, Space, Javascript..."
-                  className="w-full px-4 py-3 rounded-xl bg-gray-950 border border-white/5 text-white outline-none transition-all placeholder:text-gray-700 input-focus-glow"
+                  className="w-full px-4 py-3 rounded-xl bg-theme-input-bg border border-theme-border text-theme-input-text outline-none transition-all placeholder:text-theme-text-muted/40 input-focus-glow"
                   autoFocus
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Premade Topics</label>
+                <label className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-3">Premade Topics</label>
                 <div className="grid grid-cols-2 gap-2 max-h-[190px] overflow-y-auto pr-1">
                   {premadeTopics.map((t) => (
                     <button
                       key={t.id}
                       type="button"
                       onClick={() => handlePremadeSelect(t)}
-                      className="px-3 py-2.5 rounded-xl border border-white/5 bg-gray-950/40 text-left hover:border-amber-500/35 hover:bg-slate-900/35 text-xs text-gray-300 hover:text-white transition-all cursor-pointer flex items-center gap-2 btn-active-scale font-semibold"
+                      className="px-3 py-2.5 rounded-xl border border-theme-border bg-theme-input-bg/40 text-left hover:border-amber-500/35 hover:bg-theme-card-bg-hover text-xs text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer flex items-center gap-2 btn-active-scale font-semibold"
                     >
                       <span className="text-sm">{t.icon}</span>
                       <span className="truncate">{t.title}</span>
@@ -522,11 +522,11 @@ export default function SurpriseMeModal({ onGenerate, onClose }) {
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 pt-4 border-t border-white/5">
+              <div className="flex justify-end gap-3 pt-4 border-t border-theme-border">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-white transition-all cursor-pointer btn-active-scale"
+                  className="px-4 py-2.5 rounded-xl bg-theme-glass-bg hover:bg-theme-card-bg-hover border border-theme-border text-theme-text-primary transition-all cursor-pointer btn-active-scale"
                 >
                   Cancel
                 </button>

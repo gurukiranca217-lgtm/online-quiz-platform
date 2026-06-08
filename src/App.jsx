@@ -6,6 +6,7 @@ import AiDocument from './components/AiDocument';
 import SurpriseMeModal from './components/SurpriseMeModal';
 import RoomLobby from './components/RoomLobby';
 import QuizPlayer from './components/QuizPlayer';
+import ThemeToggle from './components/ThemeToggle';
 
 
 
@@ -151,16 +152,16 @@ export default function App() {
       <div className="bg-mesh" />
 
       {/* Header Bar */}
-      <header className="sticky top-0 z-40 w-full bg-gray-950/80 backdrop-blur-md border-b border-white/5">
+      <header className="sticky top-0 z-40 w-full bg-theme-header-bg backdrop-blur-md border-b border-theme-border transition-all duration-300">
         <div className="max-w-6xl mx-auto px-4 md:px-6 py-4 flex items-center justify-between">
           <button 
             onClick={() => setView('dashboard')}
-            className="flex items-center gap-2.5 text-white hover:opacity-90 transition-opacity cursor-pointer group"
+            className="flex items-center gap-2.5 text-theme-text-primary hover:opacity-90 transition-opacity cursor-pointer group"
           >
             <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-400 group-hover:scale-105 transition-transform">
               <BookOpen className="w-5 h-5" />
             </div>
-            <span className="font-display font-black text-xl tracking-tight bg-gradient-to-r from-white via-white to-indigo-400 bg-clip-text text-transparent">
+            <span className="font-display font-black text-xl tracking-tight bg-gradient-to-r from-theme-text-primary to-brand-indigo bg-clip-text text-transparent">
               Quizverse
             </span>
           </button>
@@ -169,11 +170,13 @@ export default function App() {
             {view !== 'dashboard' && (
               <button 
                 onClick={() => setView('dashboard')}
-                className="px-4 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-sm font-semibold text-gray-300 hover:text-white transition-all cursor-pointer btn-active-scale"
+                className="px-4 py-2 rounded-xl bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-sm font-semibold text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
               >
                 Dashboard
               </button>
             )}
+
+            <ThemeToggle />
             
             <button 
               onClick={() => handleSelectCard('manual')}
@@ -193,34 +196,34 @@ export default function App() {
             <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-24">
               
               {/* Control Console: Hero Card */}
-              <div className="glass-panel rounded-3xl p-6 border border-white/5 relative overflow-hidden bg-gradient-to-b from-indigo-500/5 to-transparent text-left">
+              <div className="glass-panel rounded-3xl p-6 border border-theme-border relative overflow-hidden bg-gradient-to-b from-indigo-500/5 to-transparent text-left">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-indigo-500/5 rounded-full blur-xl pointer-events-none" />
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-[10px] font-bold text-indigo-400 mb-4">
                   <Sparkles className="w-3 h-3" /> Next-Gen Trivia Engine
                 </div>
-                <h1 className="text-3xl font-black tracking-tight text-white leading-tight font-display mb-2">
+                <h1 className="text-3xl font-black tracking-tight text-theme-text-primary leading-tight font-display mb-2">
                   Quizverse Hub
                 </h1>
-                <p className="text-gray-400 text-xs leading-relaxed font-light">
+                <p className="text-theme-text-muted text-xs leading-relaxed font-light">
                   Generate tailored exams manually, parse files with AI models, or play multiplayer rooms.
                 </p>
               </div>
 
               {/* Control Console: Stats Box */}
-              <div className="glass-panel rounded-3xl p-6 border border-white/5 relative overflow-hidden bg-gradient-to-br from-indigo-500/10 via-indigo-500/2 to-transparent group flex flex-col gap-4 text-left">
+              <div className="glass-panel rounded-3xl p-6 border border-theme-border relative overflow-hidden bg-gradient-to-br from-indigo-500/10 via-indigo-500/2 to-transparent group flex flex-col gap-4 text-left">
                 <div className="flex justify-between items-center">
                   <div>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-0.5">Total Quizzes</span>
-                    <span className="text-3xl font-black text-white font-display leading-none">{quizzes.length}</span>
+                    <span className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider block mb-0.5">Total Quizzes</span>
+                    <span className="text-3xl font-black text-theme-text-primary font-display leading-none">{quizzes.length}</span>
                   </div>
                   <div className="p-2.5 rounded-xl bg-indigo-500/10 text-indigo-400">
                     <Database className="w-5 h-5" />
                   </div>
                 </div>
-                <div className="flex justify-between items-center pt-3 border-t border-white/5">
+                <div className="flex justify-between items-center pt-3 border-t border-theme-border">
                   <div>
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-0.5">Total Questions</span>
-                    <span className="text-3xl font-black text-white font-display leading-none">
+                    <span className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider block mb-0.5">Total Questions</span>
+                    <span className="text-3xl font-black text-theme-text-primary font-display leading-none">
                       {quizzes.reduce((acc, q) => acc + (q.questions?.length || 0), 0)}
                     </span>
                   </div>
@@ -231,15 +234,15 @@ export default function App() {
               </div>
 
               {/* Control Console: Quizmaster Level Status */}
-              <div className="glass-panel rounded-3xl p-6 border border-white/5 relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-amber-500/2 to-transparent group text-left">
+              <div className="glass-panel rounded-3xl p-6 border border-theme-border relative overflow-hidden bg-gradient-to-br from-amber-500/10 via-amber-500/2 to-transparent group text-left">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none group-hover:scale-110 transition-transform duration-700" />
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
-                    <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block mb-1">Quizmaster Rank</span>
-                    <h3 className="text-md font-extrabold text-white leading-tight mb-1">
+                    <span className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider block mb-1">Quizmaster Rank</span>
+                    <h3 className="text-md font-extrabold text-theme-text-primary leading-tight mb-1">
                       {rank.title}
                     </h3>
-                    <p className="text-[10px] text-gray-400 font-light leading-relaxed">
+                    <p className="text-[10px] text-theme-text-muted font-light leading-relaxed">
                       {rank.desc}
                     </p>
                   </div>
@@ -247,11 +250,11 @@ export default function App() {
 
                 {/* Progress bar */}
                 <div className="mt-4">
-                  <div className="flex justify-between text-[9px] text-gray-500 font-bold mb-1">
+                  <div className="flex justify-between text-[9px] text-theme-text-muted font-bold mb-1">
                     <span>Rank Progress</span>
                     <span>{rank.label}</span>
                   </div>
-                  <div className="w-full h-1 bg-gray-950/80 rounded-full overflow-hidden">
+                  <div className="w-full h-1 bg-theme-bg/85 rounded-full overflow-hidden">
                     <div 
                       className="h-full bg-gradient-to-r from-amber-500 to-amber-300 transition-all duration-500"
                       style={{ width: `${rank.percentage}%` }}
@@ -268,7 +271,7 @@ export default function App() {
               
               {/* Quick Actions grid */}
               <div className="space-y-4">
-                <h2 className="text-lg font-extrabold text-white font-display flex items-center gap-2">
+                <h2 className="text-lg font-extrabold text-theme-text-primary font-display flex items-center gap-2">
                   <span>⚡</span> Quick Actions
                 </h2>
                 <ActionCards activeCard={activeCard} onSelectCard={handleSelectCard} />
@@ -277,19 +280,19 @@ export default function App() {
               {/* Saved Quizzes Section */}
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-extrabold text-white font-display flex items-center gap-2">
+                  <h2 className="text-lg font-extrabold text-theme-text-primary font-display flex items-center gap-2">
                     <span>📁</span> Saved Quizzes
                   </h2>
-                  <span className="text-xs text-gray-400 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full font-bold">
+                  <span className="text-xs text-theme-text-secondary bg-theme-glass-bg border border-theme-border px-2.5 py-1 rounded-full font-bold">
                     {quizzes.length} Quizzes
                   </span>
                 </div>
 
                 {quizzes.length === 0 ? (
-                  <div className="glass-panel rounded-3xl p-12 text-center border border-white/5">
-                    <Database className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                    <h3 className="text-lg font-bold text-white mb-1">No quizzes saved yet</h3>
-                    <p className="text-sm text-gray-400 max-w-sm mx-auto mb-6">
+                  <div className="glass-panel rounded-3xl p-12 text-center border border-theme-border">
+                    <Database className="w-12 h-12 text-theme-text-muted mx-auto mb-4" />
+                    <h3 className="text-lg font-bold text-theme-text-primary mb-1">No quizzes saved yet</h3>
+                    <p className="text-sm text-theme-text-secondary max-w-sm mx-auto mb-6">
                       Create a custom quiz or upload document pages to construct one automatically.
                     </p>
                     <button
@@ -305,7 +308,7 @@ export default function App() {
                       <div 
                         key={quiz.id}
                         onClick={() => handleStartPlay(quiz)}
-                        className="glass-panel glass-panel-hover rounded-2xl p-6 border border-white/5 flex flex-col justify-between h-full cursor-pointer relative group btn-active-scale"
+                        className="glass-panel glass-panel-hover rounded-2xl p-6 border border-theme-border flex flex-col justify-between h-full cursor-pointer relative group btn-active-scale"
                       >
                         <div>
                           {/* Meta badge */}
@@ -313,7 +316,7 @@ export default function App() {
                             <div className="flex gap-2">
                               <span className={`text-[10px] uppercase font-black px-2.5 py-0.5 rounded-full border ${
                                 quiz.type === 'preloaded' 
-                                    ? 'text-gray-400 bg-white/5 border-white/10' 
+                                    ? 'text-theme-text-muted bg-theme-glass-bg border-theme-border' 
                                     : quiz.type === 'manual' 
                                       ? 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20' 
                                       : 'text-purple-400 bg-purple-500/10 border-purple-500/20'
@@ -326,29 +329,29 @@ export default function App() {
                                     ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20'
                                     : quiz.difficulty === 'Medium'
                                       ? 'text-amber-400 bg-amber-500/10 border-amber-500/20'
-                                      : 'text-rose-400 bg-rose-500/10 border-rose-500/20'
+                                      : 'text-rose-450 bg-rose-500/10 border-rose-500/20'
                                 }`}>
                                   {quiz.difficulty}
                                 </span>
                               )}
                             </div>
 
-                            <span className="inline-flex items-center gap-1 text-xs text-gray-500 font-medium">
+                            <span className="inline-flex items-center gap-1 text-xs text-theme-text-muted font-medium">
                               <Clock className="w-3.5 h-3.5" /> {formatDate(quiz.createdAt)}
                             </span>
                           </div>
 
-                          <h3 className="text-md font-bold text-white mb-2 group-hover:text-indigo-400 transition-colors">
+                          <h3 className="text-md font-bold text-theme-text-primary mb-2 group-hover:text-indigo-400 transition-colors">
                             {quiz.title}
                           </h3>
 
-                          <p className="text-xs text-gray-400 leading-relaxed font-light mb-6 line-clamp-2">
+                          <p className="text-xs text-theme-text-secondary leading-relaxed font-light mb-6 line-clamp-2">
                             {quiz.description}
                           </p>
                         </div>
 
-                        <div className="flex justify-between items-center pt-4 border-t border-white/5">
-                          <span className="text-xs font-bold text-gray-400 flex items-center gap-1.5">
+                        <div className="flex justify-between items-center pt-4 border-t border-theme-border">
+                          <span className="text-xs font-bold text-theme-text-muted flex items-center gap-1.5">
                             <BarChart3 className="w-4 h-4 text-indigo-400" />
                             {quiz.questions?.length || 0} Questions
                           </span>
@@ -357,7 +360,7 @@ export default function App() {
                             {/* Delete button */}
                             <button
                               onClick={(e) => handleDeleteQuiz(quiz.id, e)}
-                              className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-rose-500/10 hover:border-rose-500/20 text-gray-400 hover:text-rose-400 transition-all cursor-pointer btn-active-scale"
+                              className="p-2 rounded-lg bg-theme-glass-bg border border-theme-border hover:bg-rose-500/10 hover:border-rose-500/20 text-theme-text-muted hover:text-rose-400 transition-all cursor-pointer btn-active-scale"
                               title="Delete quiz"
                             >
                               <Trash2 className="w-4 h-4" />

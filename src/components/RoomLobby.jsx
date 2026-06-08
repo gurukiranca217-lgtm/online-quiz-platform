@@ -303,14 +303,14 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
 
   if (subView === 'choose-saved') {
     return (
-      <div className="max-w-xl mx-auto glass-panel rounded-3xl p-8 border border-white/5 text-left relative overflow-hidden">
-        <div className="flex justify-between items-center pb-6 border-b border-white/5 mb-6">
-          <h3 className="text-lg font-bold text-white flex items-center gap-2">
+      <div className="max-w-xl mx-auto glass-panel rounded-3xl p-8 border border-theme-border text-left relative overflow-hidden">
+        <div className="flex justify-between items-center pb-6 border-b border-theme-border mb-6">
+          <h3 className="text-lg font-bold text-theme-text-primary flex items-center gap-2">
             📁 Select Lobby Quiz
           </h3>
           <button
             onClick={() => setSubView('lobby-main')}
-            className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-white transition-all cursor-pointer"
+            className="p-1.5 rounded-lg bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
           </button>
@@ -325,11 +325,11 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
                   setSelectedRoomQuiz(quiz);
                   setSubView('lobby-main');
                 }}
-                className="w-full text-left p-4 rounded-xl border border-white/5 hover:border-indigo-500/30 hover:bg-white/2 cursor-pointer transition-all flex justify-between items-center"
+                className="w-full text-left p-4 rounded-xl border border-theme-border hover:border-indigo-500/30 hover:bg-theme-card-bg-hover cursor-pointer transition-all flex justify-between items-center"
               >
                 <div>
-                  <h4 className="text-sm font-bold text-white mb-0.5">{quiz.title}</h4>
-                  <p className="text-xs text-gray-400 line-clamp-1">{quiz.description}</p>
+                  <h4 className="text-sm font-bold text-theme-text-primary mb-0.5">{quiz.title}</h4>
+                  <p className="text-xs text-theme-text-secondary line-clamp-1">{quiz.description}</p>
                 </div>
                 <span className="text-xs font-bold text-indigo-400 shrink-0">
                   {quiz.questions?.length || 0} Qs
@@ -337,7 +337,7 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
               </button>
             ))
           ) : (
-            <div className="text-center py-6 text-sm text-gray-500">
+            <div className="text-center py-6 text-sm text-theme-text-muted">
               No saved quizzes available. Build a custom quiz or generate one using AI first!
             </div>
           )}
@@ -345,7 +345,7 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
 
         <button
           onClick={() => setSubView('lobby-main')}
-          className="w-full py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-sm transition-all cursor-pointer text-center"
+          className="w-full py-2.5 rounded-xl bg-theme-glass-bg hover:bg-theme-card-bg-hover border border-theme-border text-theme-text-primary font-semibold text-sm transition-all cursor-pointer text-center"
         >
           Cancel
         </button>
@@ -354,32 +354,32 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
   }
 
   return (
-    <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-8 border border-white/5 relative overflow-hidden text-center animate-modal-in">
+    <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-8 border border-theme-border relative overflow-hidden text-center animate-modal-in">
       {/* Background radial highlight */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       {countdown !== null ? (
         /* Countdown screen */
         <div className="py-16 flex flex-col items-center justify-center">
-          <h2 className="text-3xl font-extrabold text-white mb-6 uppercase tracking-wider font-display">Starting Room Quiz</h2>
+          <h2 className="text-3xl font-extrabold text-theme-text-primary mb-6 uppercase tracking-wider font-display">Starting Room Quiz</h2>
           <div className="w-32 h-32 rounded-full border-4 border-emerald-500/30 flex items-center justify-center bg-emerald-500/10 animate-bounce mb-8 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
             <span className="text-6xl font-black text-emerald-400 font-display">{countdown}</span>
           </div>
-          <p className="text-gray-400 text-sm pulse-status">Syncing lobbies across nodes...</p>
+          <p className="text-theme-text-muted text-sm pulse-status">Syncing lobbies across nodes...</p>
         </div>
       ) : lobbyView === 'landing' ? (
         /* Multiplayer Option Selector */
         <div>
-          <div className="flex justify-between items-center pb-6 border-b border-white/5 mb-8">
+          <div className="flex justify-between items-center pb-6 border-b border-theme-border mb-8">
             <div className="text-left">
-              <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+              <h2 className="text-2xl font-extrabold text-theme-text-primary tracking-tight flex items-center gap-2">
                 <span>🏠</span> Multiplayer Room Quiz
               </h2>
-              <p className="text-sm text-gray-400 mt-1">Host a live trivia match or compete in a friend's custom room.</p>
+              <p className="text-sm text-theme-text-muted mt-1">Host a live trivia match or compete in a friend's custom room.</p>
             </div>
             <button
               onClick={onCancel}
-              className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-white transition-all cursor-pointer btn-active-scale"
+              className="p-2 rounded-xl bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
@@ -387,38 +387,38 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 my-8">
             {/* Host card */}
-            <div className="glass-panel border-white/5 hover:border-emerald-500/25 p-8 rounded-2xl flex flex-col justify-between hover:bg-slate-900/30 transition-all duration-300 hover:scale-[1.025] hover:-translate-y-0.5 group">
+            <div className="glass-panel border-theme-border hover:border-emerald-500/25 p-8 rounded-2xl flex flex-col justify-between hover:bg-theme-card-bg-hover transition-all duration-300 hover:scale-[1.025] hover:-translate-y-0.5 group">
               <div>
                 <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                   <Shield className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2 font-display">Create a Room</h3>
-                <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                <h3 className="text-lg font-bold text-theme-text-primary mb-2 font-display">Create a Room</h3>
+                <p className="text-sm text-theme-text-secondary leading-relaxed mb-6">
                   Generate a 6-digit room code, become the host, invite players, and control when the quiz starts.
                 </p>
               </div>
               <button
                 onClick={handleCreateRoom}
-                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-550 text-white font-semibold text-sm transition-all cursor-pointer shadow-lg shadow-emerald-600/15 btn-active-scale"
+                className="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-555 text-white font-semibold text-sm transition-all cursor-pointer shadow-lg shadow-emerald-600/15 btn-active-scale"
               >
                 Host Lobby
               </button>
             </div>
 
             {/* Join card */}
-            <div className="glass-panel border-white/5 hover:border-indigo-500/25 p-8 rounded-2xl flex flex-col justify-between hover:bg-slate-900/30 transition-all duration-300 hover:scale-[1.025] hover:-translate-y-0.5 group">
+            <div className="glass-panel border-theme-border hover:border-indigo-500/25 p-8 rounded-2xl flex flex-col justify-between hover:bg-theme-card-bg-hover transition-all duration-300 hover:scale-[1.025] hover:-translate-y-0.5 group">
               <div>
                 <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                   <UserPlus className="w-6 h-6" />
                 </div>
-                <h3 className="text-lg font-bold text-white mb-2 font-display">Join a Room</h3>
-                <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                <h3 className="text-lg font-bold text-theme-text-primary mb-2 font-display">Join a Room</h3>
+                <p className="text-sm text-theme-text-secondary leading-relaxed mb-6">
                   Got a lobby code? Input it along with a nickname to join the queue and play against others.
                 </p>
               </div>
               <button
                 onClick={() => setLobbyView('join')}
-                className="w-full py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold text-sm transition-all cursor-pointer btn-active-scale"
+                className="w-full py-3 rounded-xl bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-primary font-semibold text-sm transition-all cursor-pointer btn-active-scale"
               >
                 Join Lobby
               </button>
@@ -428,13 +428,13 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
       ) : lobbyView === 'join' ? (
         /* Join Room Form */
         <div className="max-w-md mx-auto">
-          <div className="flex justify-between items-center pb-6 border-b border-white/5 mb-8">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2 font-display">
+          <div className="flex justify-between items-center pb-6 border-b border-theme-border mb-8">
+            <h3 className="text-lg font-bold text-theme-text-primary flex items-center gap-2 font-display">
               <UserPlus className="w-5 h-5 text-indigo-400" /> Join Room
             </h3>
             <button
               onClick={() => setLobbyView('landing')}
-              className="p-1.5 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-white transition-all cursor-pointer btn-active-scale"
+              className="p-1.5 rounded-lg bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
@@ -442,26 +442,26 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
 
           <form onSubmit={handleJoinSubmit} className="space-y-5 text-left">
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">6-Digit Room Code</label>
+              <label className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-2">6-Digit Room Code</label>
               <input
                 type="text"
                 maxLength="6"
                 value={joinCodeInput}
                 onChange={(e) => setJoinCodeInput(e.target.value.toUpperCase())}
                 placeholder="e.g. AB47X9"
-                className="w-full px-4 py-3 rounded-xl bg-gray-950 border border-white/5 text-white text-center font-mono font-bold tracking-widest outline-none transition-all placeholder:font-sans placeholder:tracking-normal placeholder:text-gray-750 input-focus-glow"
+                className="w-full px-4 py-3 rounded-xl bg-theme-input-bg border border-theme-border text-theme-input-text text-center font-mono font-bold tracking-widest outline-none transition-all placeholder:font-sans placeholder:tracking-normal placeholder:text-theme-text-muted/40 input-focus-glow"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Your Nickname</label>
+              <label className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-2">Your Nickname</label>
               <input
                 type="text"
                 maxLength="12"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 placeholder="e.g. MasterQuiz"
-                className="w-full px-4 py-3 rounded-xl bg-gray-950 border border-white/5 text-white outline-none transition-all placeholder:text-gray-750 input-focus-glow"
+                className="w-full px-4 py-3 rounded-xl bg-theme-input-bg border border-theme-border text-theme-input-text outline-none transition-all placeholder:text-theme-text-muted/40 input-focus-glow"
               />
             </div>
 
@@ -487,11 +487,11 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
           <div className="mb-8 flex flex-col md:flex-row items-center justify-center gap-8">
             <div className="text-center">
               <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider block mb-1">Room Code</span>
-              <div className="inline-flex items-center gap-3 bg-gray-950 px-6 py-3.5 rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
-                <span className="font-mono text-3xl font-black text-white tracking-widest">{roomCode}</span>
+              <div className="inline-flex items-center gap-3 bg-theme-input-bg px-6 py-3.5 rounded-2xl border border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.1)]">
+                <span className="font-mono text-3xl font-black text-theme-text-primary tracking-widest">{roomCode}</span>
                 <button
                   onClick={copyToClipboard}
-                  className="p-1.5 rounded-lg hover:bg-white/5 text-gray-400 hover:text-white transition-all cursor-pointer btn-active-scale"
+                  className="p-1.5 rounded-lg hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
                   title="Copy Code"
                 >
                   <Clipboard className="w-4 h-4" />
@@ -528,24 +528,24 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
           {/* Connected players and Lobby Quiz Settings (Dual Columns) */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto mb-8 text-left animate-fade-in">
             {/* Player Queue (Left Column) */}
-            <div className="glass-panel bg-gray-950/40 p-6 rounded-2xl border border-white/5">
-              <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
-                <span className="text-sm font-bold text-white flex items-center gap-2 font-display">
+            <div className="glass-panel bg-theme-panel-bg/30 p-6 rounded-2xl border border-theme-border">
+              <div className="flex items-center justify-between border-b border-theme-border pb-3 mb-4">
+                <span className="text-sm font-bold text-theme-text-primary flex items-center gap-2 font-display">
                   <Users className="w-4 h-4 text-emerald-400" />
                   Players ({players.length})
                 </span>
-                <span className="text-xs text-gray-400 bg-white/5 px-2 py-0.5 rounded-full font-bold">
+                <span className="text-xs text-theme-text-secondary bg-theme-glass-bg px-2 py-0.5 rounded-full font-bold">
                   {players.length} / 6
                 </span>
               </div>
               <div className="space-y-3">
                 {players.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between p-2.5 rounded-xl bg-gray-950/60 border border-white/5 hover:scale-[1.01] transition-transform">
+                  <div key={p.id} className="flex items-center justify-between p-2.5 rounded-xl bg-theme-input-bg/60 border border-theme-border hover:scale-[1.01] transition-transform">
                     <div className="flex items-center gap-3">
                       <div className={`w-8 h-8 rounded-lg ${p.avatarColor || 'bg-gray-700'} flex items-center justify-center text-white font-bold`}>
                         {p.name.charAt(0).toUpperCase()}
                       </div>
-                      <span className="text-sm font-semibold text-white">{p.name}</span>
+                      <span className="text-sm font-semibold text-theme-text-primary">{p.name}</span>
                     </div>
                     {p.id === 'host' ? (
                       <span className="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
@@ -560,62 +560,62 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
             </div>
 
             {/* Quiz Content Config (Right Column) */}
-            <div className="glass-panel bg-gray-950/40 p-6 rounded-2xl border border-white/5 flex flex-col justify-between">
+            <div className="glass-panel bg-theme-panel-bg/30 p-6 rounded-2xl border border-theme-border flex flex-col justify-between">
               <div>
-                <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-1">Lobby Quiz Subject</span>
-                <h4 className="text-md font-bold text-white mb-1 line-clamp-1 font-display">{selectedRoomQuiz.title}</h4>
-                <p className="text-xs text-gray-450 font-light mb-4 line-clamp-2 leading-relaxed">{selectedRoomQuiz.description}</p>
+                <span className="text-xs font-bold text-theme-text-muted uppercase tracking-wider block mb-1">Lobby Quiz Subject</span>
+                <h4 className="text-md font-bold text-theme-text-primary mb-1 line-clamp-1 font-display">{selectedRoomQuiz.title}</h4>
+                <p className="text-xs text-theme-text-secondary font-light mb-4 line-clamp-2 leading-relaxed">{selectedRoomQuiz.description}</p>
                 <span className="inline-flex items-center gap-1.5 text-xs text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-full border border-indigo-500/20 font-bold mb-6">
                   {selectedRoomQuiz.questions?.length || 0} Questions
                 </span>
               </div>
 
               {isHost ? (
-                <div className="space-y-3 pt-4 border-t border-white/5">
-                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider block">Modify Quiz Content</span>
+                <div className="space-y-3 pt-4 border-t border-theme-border">
+                  <span className="text-[10px] font-bold text-theme-text-muted uppercase tracking-wider block">Modify Quiz Content</span>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <button 
                       onClick={() => setSubView('choose-saved')}
-                      className="p-2.5 rounded-xl border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 font-semibold cursor-pointer text-center btn-active-scale"
+                      className="p-2.5 rounded-xl border border-theme-border hover:border-theme-border/60 hover:bg-theme-card-bg-hover text-theme-text-secondary font-semibold cursor-pointer text-center btn-active-scale"
                     >
                       📁 Saved Quizzes
                     </button>
                     <button 
                       onClick={() => setSubView('create-manual')}
-                      className="p-2.5 rounded-xl border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 font-semibold cursor-pointer text-center btn-active-scale"
+                      className="p-2.5 rounded-xl border border-theme-border hover:border-theme-border/60 hover:bg-theme-card-bg-hover text-theme-text-secondary font-semibold cursor-pointer text-center btn-active-scale"
                     >
                       ✏️ Create New
                     </button>
                     <button 
                       onClick={() => setSubView('upload-ai')}
-                      className="p-2.5 rounded-xl border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 font-semibold cursor-pointer text-center btn-active-scale"
+                      className="p-2.5 rounded-xl border border-theme-border hover:border-theme-border/60 hover:bg-theme-card-bg-hover text-theme-text-secondary font-semibold cursor-pointer text-center btn-active-scale"
                     >
                       🤖 AI Document
                     </button>
                     <button 
                       onClick={() => setShowSurprise(true)}
-                      className="p-2.5 rounded-xl border border-white/5 hover:border-white/10 hover:bg-white/5 text-gray-300 font-semibold cursor-pointer text-center btn-active-scale"
+                      className="p-2.5 rounded-xl border border-theme-border hover:border-theme-border/60 hover:bg-theme-card-bg-hover text-theme-text-secondary font-semibold cursor-pointer text-center btn-active-scale"
                     >
                       🎲 Surprise Me
                     </button>
                   </div>
                 </div>
               ) : (
-                <div className="p-3 bg-white/2 border border-white/5 rounded-xl text-center">
-                  <span className="text-xs text-gray-500">Only the host can modify the quiz selection.</span>
+                <div className="p-3 bg-theme-glass-bg/50 border border-theme-border rounded-xl text-center">
+                  <span className="text-xs text-theme-text-muted">Only the host can modify the quiz selection.</span>
                 </div>
               )}
             </div>
           </div>
 
           {/* Lobby Footer Action */}
-          <div className="pt-6 border-t border-white/5 max-w-md mx-auto">
+          <div className="pt-6 border-t border-theme-border max-w-md mx-auto">
             {isHost ? (
               <div className="space-y-4">
                 <div className="flex gap-4">
                   <button
                     onClick={() => setLobbyView('landing')}
-                    className="flex-1 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-white transition-all cursor-pointer btn-active-scale"
+                    className="flex-1 py-3 rounded-xl bg-theme-glass-bg hover:bg-theme-card-bg-hover border border-theme-border text-sm font-semibold text-theme-text-primary transition-all cursor-pointer btn-active-scale"
                   >
                     Close Lobby
                   </button>
@@ -629,13 +629,13 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
               </div>
             ) : (
               <div>
-                <p className="text-sm text-gray-400 flex items-center justify-center gap-2">
+                <p className="text-sm text-theme-text-secondary flex items-center justify-center gap-2">
                   <Loader2 className="w-4 h-4 text-emerald-400 animate-spin" />
                   Waiting for host to start the match...
                 </p>
                 <button
                   onClick={() => setLobbyView('landing')}
-                  className="w-full mt-6 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-white transition-all cursor-pointer btn-active-scale"
+                  className="w-full mt-6 py-2.5 rounded-xl bg-theme-glass-bg hover:bg-theme-card-bg-hover border border-theme-border text-sm font-semibold text-theme-text-primary transition-all cursor-pointer btn-active-scale"
                 >
                   Leave Lobby
                 </button>

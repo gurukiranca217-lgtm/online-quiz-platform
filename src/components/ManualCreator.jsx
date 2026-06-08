@@ -99,20 +99,20 @@ export default function ManualCreator({ onSave, onCancel }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-8 border border-white/5 relative overflow-hidden animate-modal-in">
+    <div className="max-w-4xl mx-auto glass-panel rounded-3xl p-8 border border-theme-border relative overflow-hidden animate-modal-in">
       {/* Decorative header blur */}
       <div className="absolute top-0 right-0 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
       
-      <div className="flex justify-between items-center pb-6 border-b border-white/5 mb-8">
+      <div className="flex justify-between items-center pb-6 border-b border-theme-border mb-8">
         <div>
-          <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
+          <h2 className="text-2xl font-extrabold text-theme-text-primary tracking-tight flex items-center gap-2">
             <span>✏️</span> Create Custom Quiz
           </h2>
-          <p className="text-sm text-gray-400 mt-1">Design a tailored quiz with custom questions and answers.</p>
+          <p className="text-sm text-theme-text-muted mt-1">Design a tailored quiz with custom questions and answers.</p>
         </div>
         <button
           onClick={onCancel}
-          className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-gray-400 hover:text-white transition-all cursor-pointer btn-active-scale"
+          className="p-2 rounded-xl bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
         >
           <X className="w-5 h-5" />
         </button>
@@ -128,43 +128,43 @@ export default function ManualCreator({ onSave, onCancel }) {
         {/* Quiz Meta Info */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div className="md:col-span-1 space-y-1">
-            <label className="text-sm font-semibold text-gray-300">Quiz Settings</label>
-            <p className="text-xs text-gray-500">Provide general details that players will see on their dashboard.</p>
+            <label className="text-sm font-semibold text-theme-text-secondary">Quiz Settings</label>
+            <p className="text-xs text-theme-text-muted">Provide general details that players will see on their dashboard.</p>
           </div>
           
           <div className="md:col-span-2 space-y-4">
             <div>
-              <label htmlFor="quiz-title" className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Quiz Title</label>
+              <label htmlFor="quiz-title" className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-2">Quiz Title</label>
               <input
                 id="quiz-title"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. JavaScript Core Concepts"
-                className="w-full px-4 py-3 rounded-xl bg-gray-950 border border-white/5 text-white outline-none transition-all placeholder:text-gray-650 input-focus-glow"
+                className="w-full px-4 py-3 rounded-xl bg-theme-input-bg border border-theme-border text-theme-input-text outline-none transition-all placeholder:text-theme-text-muted/50 input-focus-glow"
               />
             </div>
             
             <div>
-              <label htmlFor="quiz-desc" className="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Description (Optional)</label>
+              <label htmlFor="quiz-desc" className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-2">Description (Optional)</label>
               <textarea
                 id="quiz-desc"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="Brief summary of what this quiz covers..."
                 rows="2"
-                className="w-full px-4 py-3 rounded-xl bg-gray-950 border border-white/5 text-white outline-none transition-all placeholder:text-gray-655 resize-none input-focus-glow"
+                className="w-full px-4 py-3 rounded-xl bg-theme-input-bg border border-theme-border text-theme-input-text outline-none transition-all placeholder:text-theme-text-muted/50 resize-none input-focus-glow"
               />
             </div>
           </div>
         </div>
 
-        <hr className="border-white/5" />
+        <hr className="border-theme-border" />
 
         {/* Questions Section */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
-            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+            <h3 className="text-lg font-bold text-theme-text-primary flex items-center gap-2">
               <HelpCircle className="w-5 h-5 text-indigo-400" />
               Questions List ({questions.length})
             </h3>
@@ -182,7 +182,7 @@ export default function ManualCreator({ onSave, onCancel }) {
             {questions.map((q, qIndex) => (
               <div 
                 key={q.id} 
-                className="p-6 rounded-2xl bg-gray-950/50 border border-white/5 hover:border-white/10 transition-colors relative group"
+                className="p-6 rounded-2xl bg-theme-panel-bg/30 border border-theme-border hover:border-theme-border/60 transition-colors relative group"
               >
                 {/* Question Header */}
                 <div className="flex justify-between items-center mb-4">
@@ -194,7 +194,7 @@ export default function ManualCreator({ onSave, onCancel }) {
                     <button
                       type="button"
                       onClick={() => handleRemoveQuestion(q.id)}
-                      className="p-1.5 rounded-lg text-gray-500 hover:bg-rose-500/10 hover:text-rose-400 transition-all cursor-pointer opacity-0 group-hover:opacity-100 btn-active-scale"
+                      className="p-1.5 rounded-lg text-theme-text-muted hover:bg-rose-500/10 hover:text-rose-400 transition-all cursor-pointer opacity-0 group-hover:opacity-100 btn-active-scale"
                       title="Remove question"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -209,7 +209,7 @@ export default function ManualCreator({ onSave, onCancel }) {
                     value={q.text}
                     onChange={(e) => handleQuestionTextChange(q.id, e.target.value)}
                     placeholder="Enter the question prompt..."
-                    className="w-full px-4 py-3 rounded-xl bg-gray-950 border border-white/5 text-white outline-none transition-all placeholder:text-gray-650 font-medium input-focus-glow"
+                    className="w-full px-4 py-3 rounded-xl bg-theme-input-bg border border-theme-border text-theme-input-text outline-none transition-all placeholder:text-theme-text-muted/50 font-medium input-focus-glow"
                   />
                 </div>
 
@@ -222,10 +222,10 @@ export default function ManualCreator({ onSave, onCancel }) {
                     return (
                       <div 
                         key={oIndex} 
-                        className={`flex items-center gap-3 p-3 rounded-xl bg-gray-950 border transition-all ${
+                        className={`flex items-center gap-3 p-3 rounded-xl bg-theme-input-bg border transition-all ${
                           isChecked 
                             ? 'border-emerald-500/40 bg-emerald-500/5 shadow-lg shadow-emerald-500/2' 
-                            : 'border-white/5 hover:border-white/10 hover:scale-[1.01]'
+                            : 'border-theme-border hover:border-theme-border/60 hover:scale-[1.01]'
                         }`}
                       >
                         {/* Radio Selector */}
@@ -237,7 +237,7 @@ export default function ManualCreator({ onSave, onCancel }) {
                             onChange={() => handleCorrectOptionChange(q.id, oIndex)}
                             className="sr-only peer"
                           />
-                          <div className="w-5 h-5 rounded-full border border-gray-600 flex items-center justify-center peer-checked:border-emerald-500 peer-checked:bg-emerald-500 transition-all">
+                          <div className="w-5 h-5 rounded-full border border-gray-400 flex items-center justify-center peer-checked:border-emerald-500 peer-checked:bg-emerald-500 transition-all">
                             {isChecked && (
                               <div className="w-2 h-2 rounded-full bg-white" />
                             )}
@@ -246,13 +246,13 @@ export default function ManualCreator({ onSave, onCancel }) {
 
                         {/* Option Field */}
                         <div className="flex-1 flex items-center gap-2">
-                          <span className="text-xs font-bold text-gray-500">{optionLabel}</span>
+                          <span className="text-xs font-bold text-theme-text-muted">{optionLabel}</span>
                           <input
                             type="text"
                             value={option}
                             onChange={(e) => handleOptionChange(q.id, oIndex, e.target.value)}
                             placeholder={`Option ${optionLabel}`}
-                            className="w-full bg-transparent border-none text-sm text-gray-200 outline-none placeholder:text-gray-700"
+                            className="w-full bg-transparent border-none text-sm text-theme-input-text outline-none placeholder:text-theme-text-muted/40"
                           />
                         </div>
                       </div>
@@ -264,14 +264,14 @@ export default function ManualCreator({ onSave, onCancel }) {
           </div>
         </div>
 
-        <hr className="border-white/5" />
+        <hr className="border-theme-border" />
 
         {/* Action Buttons */}
         <div className="flex justify-end gap-4 pt-4">
           <button
             type="button"
             onClick={onCancel}
-            className="px-5 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-sm font-semibold text-white transition-all cursor-pointer btn-active-scale"
+            className="px-5 py-3 rounded-xl bg-theme-glass-bg hover:bg-theme-card-bg-hover border border-theme-border text-sm font-semibold text-theme-text-primary transition-all cursor-pointer btn-active-scale"
           >
             Cancel
           </button>

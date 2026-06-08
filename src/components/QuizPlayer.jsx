@@ -198,23 +198,23 @@ export default function QuizPlayer({ quiz, onExit }) {
     <div className="max-w-3xl mx-auto">
       {!showResults ? (
         /* Quiz Play Mode */
-        <div className="glass-panel rounded-3xl p-8 border border-white/5 relative overflow-hidden animate-modal-in">
+        <div className="glass-panel rounded-3xl p-8 border border-theme-border relative overflow-hidden animate-modal-in">
           {/* Header Stats */}
           <div className="flex justify-between items-center mb-6">
             <div>
               <span className="text-xs font-bold text-indigo-400 uppercase tracking-widest block mb-1">
                 Active Session
               </span>
-              <h2 className="text-xl font-black text-white truncate max-w-md font-display">{quiz.title}</h2>
+              <h2 className="text-xl font-black text-theme-text-primary truncate max-w-md font-display">{quiz.title}</h2>
             </div>
             
-            <div className="bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-xl text-xs font-bold text-gray-300">
+            <div className="bg-theme-glass-bg border border-theme-border px-3.5 py-1.5 rounded-xl text-xs font-bold text-theme-text-secondary">
               Q: {currentIdx + 1} / {totalQ}
             </div>
           </div>
 
           {/* Progress bar */}
-          <div className="w-full h-1.5 bg-gray-950 rounded-full overflow-hidden mb-8">
+          <div className="w-full h-1.5 bg-theme-bg rounded-full overflow-hidden mb-8">
             <div 
               className="h-full bg-gradient-to-r from-indigo-500 to-purple-500 transition-all duration-300"
               style={{ width: `${((currentIdx + 1) / totalQ) * 100}%` }}
@@ -223,7 +223,7 @@ export default function QuizPlayer({ quiz, onExit }) {
 
           {/* Question Box */}
           <div className="mb-8">
-            <h3 className="text-lg md:text-xl font-bold text-white leading-relaxed mb-6 font-display">
+            <h3 className="text-lg md:text-xl font-bold text-theme-text-primary leading-relaxed mb-6 font-display">
               {activeQ.question}
             </h3>
 
@@ -234,18 +234,18 @@ export default function QuizPlayer({ quiz, onExit }) {
                 const isCorrect = option === activeQ.correctAnswer;
                 
                 // Color formatting
-                let optionStyle = 'border-white/5 bg-gray-950/40 text-gray-300 hover:border-indigo-500/30 hover:bg-slate-900/40 hover:scale-[1.01] transition-transform';
+                let optionStyle = 'border-theme-border bg-theme-input-bg/50 text-theme-text-secondary hover:border-indigo-500/30 hover:bg-theme-card-bg-hover hover:scale-[1.01] transition-transform';
                 let iconElement = null;
 
                 if (isAnswered) {
                   if (isCorrect) {
-                    optionStyle = 'border-emerald-500 bg-emerald-500/10 text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]';
-                    iconElement = <Check className="w-4 h-4 text-emerald-400" />;
+                    optionStyle = 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.15)]';
+                    iconElement = <Check className="w-4 h-4 text-emerald-500" />;
                   } else if (isSelected) {
-                    optionStyle = 'border-rose-500 bg-rose-500/10 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.15)]';
-                    iconElement = <X className="w-4 h-4 text-rose-400" />;
+                    optionStyle = 'border-rose-500 bg-rose-500/10 text-rose-600 dark:text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.15)]';
+                    iconElement = <X className="w-4 h-4 text-rose-500" />;
                   } else {
-                    optionStyle = 'border-white/5 bg-gray-950/20 text-gray-650 opacity-50';
+                    optionStyle = 'border-theme-border bg-theme-input-bg/20 text-theme-text-muted opacity-50';
                   }
                 }
 
@@ -261,10 +261,10 @@ export default function QuizPlayer({ quiz, onExit }) {
                     <div className="flex items-center gap-3">
                       <div className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-bold ${
                         isAnswered && isCorrect 
-                          ? 'bg-emerald-500/20 text-emerald-300' 
+                          ? 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-300' 
                           : isAnswered && isSelected 
-                            ? 'bg-rose-500/20 text-rose-300' 
-                            : 'bg-white/5 text-gray-500'
+                            ? 'bg-rose-500/20 text-rose-600 dark:text-rose-300' 
+                            : 'bg-theme-glass-bg border border-theme-border text-theme-text-muted'
                       }`}>
                         {String.fromCharCode(65 + oIdx)}
                       </div>
@@ -279,14 +279,14 @@ export default function QuizPlayer({ quiz, onExit }) {
 
           {/* Explanation Box */}
           {isAnswered && (
-            <div className="mb-8 p-4 rounded-2xl bg-indigo-500/5 border-l-4 border-indigo-500 text-sm leading-relaxed text-gray-300 animate-fade-in">
+            <div className="mb-8 p-4 rounded-2xl bg-indigo-500/5 border-l-4 border-indigo-500 text-sm leading-relaxed text-theme-text-secondary animate-fade-in">
               <span className="font-bold text-indigo-400 block mb-1">Explanation</span>
               {activeQ.explanation || 'Review the correct choice shown above.'}
             </div>
           )}
 
           {/* Footer Action */}
-          <div className="flex justify-between items-center pt-6 border-t border-white/5">
+          <div className="flex justify-between items-center pt-6 border-t border-theme-border">
             {/* Question dots */}
             <div className="flex gap-2">
               {questions.map((_, dotIdx) => {
@@ -304,7 +304,7 @@ export default function QuizPlayer({ quiz, onExit }) {
                           ? wasCorrect 
                             ? 'bg-emerald-500' 
                             : 'bg-rose-500'
-                          : 'bg-gray-800'
+                          : 'bg-gray-300 dark:bg-gray-800'
                     }`}
                   />
                 );
@@ -322,7 +322,7 @@ export default function QuizPlayer({ quiz, onExit }) {
             ) : (
               <button
                 onClick={onExit}
-                className="px-4 py-2.5 rounded-xl hover:bg-white/5 border border-transparent hover:border-white/10 text-xs font-semibold text-gray-405 hover:text-white transition-all cursor-pointer btn-active-scale"
+                className="px-4 py-2.5 rounded-xl hover:bg-theme-card-bg-hover border border-transparent hover:border-theme-border text-xs font-semibold text-theme-text-secondary hover:text-theme-text-primary transition-all cursor-pointer btn-active-scale"
               >
                 Quit Session
               </button>
@@ -331,31 +331,31 @@ export default function QuizPlayer({ quiz, onExit }) {
         </div>
       ) : (
         /* Results Mode */
-        <div className="glass-panel rounded-3xl p-10 border border-white/5 relative overflow-hidden animate-modal-in">
+        <div className="glass-panel rounded-3xl p-10 border border-theme-border relative overflow-hidden animate-modal-in">
           <div className="absolute -top-12 -right-12 w-48 h-48 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none" />
           
           <Award className="w-16 h-16 text-indigo-400 mx-auto mb-4 animate-bounce" />
           
-          <h2 className="text-3xl font-black text-white tracking-tight mb-1 text-center font-display">Session Summary</h2>
-          <p className="text-sm text-gray-400 max-w-sm mx-auto mb-8 text-center">
-            Quiz: <span className="text-white font-semibold">{quiz.title}</span>
+          <h2 className="text-3xl font-black text-theme-text-primary tracking-tight mb-1 text-center font-display">Session Summary</h2>
+          <p className="text-sm text-theme-text-muted max-w-sm mx-auto mb-8 text-center">
+            Quiz: <span className="text-theme-text-primary font-semibold">{quiz.title}</span>
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10 text-left">
             {/* Left: Score display & Grade */}
-            <div className="glass-panel bg-gray-950/40 p-6 rounded-2xl border border-white/5 flex flex-col items-center justify-center text-center">
-              <span className="text-xs font-bold text-gray-500 uppercase tracking-wider block mb-4">Your Grade</span>
-              <div className={`inline-flex flex-col items-center justify-center w-36 h-36 rounded-full border-4 border-white/5 bg-gray-950/85 relative mb-4 ${gradeGlow} transition-all duration-555`}>
+            <div className="glass-panel bg-theme-panel-bg/30 p-6 rounded-2xl border border-theme-border flex flex-col items-center justify-center text-center">
+              <span className="text-xs font-bold text-theme-text-muted uppercase tracking-wider block mb-4">Your Grade</span>
+              <div className={`inline-flex flex-col items-center justify-center w-36 h-36 rounded-full border-4 border-theme-border bg-theme-input-bg/85 relative mb-4 ${gradeGlow} transition-all duration-555`}>
                 <div className={`absolute inset-0.5 rounded-full border-4 ${ringColor} opacity-75`} />
-                <span className="text-5xl font-black text-white relative leading-none font-display">{grade}</span>
-                <span className="text-xs font-bold text-gray-400 mt-2 relative">{percentScore}% ({score}/{totalQ})</span>
+                <span className="text-5xl font-black text-theme-text-primary relative leading-none font-display">{grade}</span>
+                <span className="text-xs font-bold text-theme-text-muted mt-2 relative">{percentScore}% ({score}/{totalQ})</span>
               </div>
               <h4 className={`text-md font-bold mb-1 ${rankColor} font-display`}>{rankTitle}</h4>
-              <p className="text-xs text-gray-400 leading-relaxed max-w-xs">{rankDesc}</p>
+              <p className="text-xs text-theme-text-secondary leading-relaxed max-w-xs">{rankDesc}</p>
             </div>
 
             {/* Right: Leaderboard (for both Room and Solo quizzes) */}
-            <div className="glass-panel bg-gray-950/40 p-6 rounded-2xl border border-white/5 flex flex-col justify-between min-h-[260px]">
+            <div className="glass-panel bg-theme-panel-bg/30 p-6 rounded-2xl border border-theme-border flex flex-col justify-between min-h-[260px]">
               <span className={`text-xs font-bold uppercase tracking-wider block text-center mb-4 ${
                 quiz.type === 'room' || quiz.id?.startsWith('room_') ? 'text-emerald-400' : 'text-indigo-400'
               }`}>
@@ -373,8 +373,8 @@ export default function QuizPlayer({ quiz, onExit }) {
                       key={player.id || player.name} 
                       className={`flex items-center justify-between p-2.5 rounded-xl border hover:scale-[1.01] transition-transform ${
                         isMe 
-                          ? 'border-emerald-500/40 bg-emerald-555/8 shadow-[0_0_12px_rgba(16,185,129,0.05)]' 
-                          : 'border-white/5 bg-gray-950/40'
+                          ? 'border-emerald-500/30 bg-emerald-500/10' 
+                          : 'border-theme-border bg-theme-input-bg/40'
                       }`}
                     >
                       <div className="flex items-center gap-3">
@@ -382,11 +382,11 @@ export default function QuizPlayer({ quiz, onExit }) {
                         <div className={`w-7 h-7 rounded-lg ${player.color} flex items-center justify-center text-white font-bold text-xs`}>
                           {player.name.charAt(0)}
                         </div>
-                        <span className={`text-xs font-semibold ${isMe ? 'text-emerald-450 font-bold' : 'text-gray-300'}`}>
+                        <span className={`text-xs ${isMe ? 'text-emerald-600 dark:text-emerald-400 font-bold' : 'text-theme-text-secondary font-semibold'}`}>
                           {player.name}
                         </span>
                       </div>
-                      <span className="text-xs font-bold text-gray-300 font-display">
+                      <span className="text-xs font-bold text-theme-text-primary font-display">
                         {player.score === -1 ? (
                           <span className="text-amber-400 animate-pulse text-[10px] uppercase font-semibold">Taking...</span>
                         ) : (
@@ -402,7 +402,7 @@ export default function QuizPlayer({ quiz, onExit }) {
 
           {/* Correct Answers & Review List */}
           <div className="text-left mb-8">
-            <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2 font-display">
+            <h3 className="text-lg font-bold text-theme-text-primary mb-4 flex items-center gap-2 font-display">
               <FileText className="w-5 h-5 text-indigo-400" /> Correct Answers & Review
             </h3>
             
@@ -413,15 +413,15 @@ export default function QuizPlayer({ quiz, onExit }) {
                 const selected = logEntry ? logEntry.selected : 'None';
                 
                 return (
-                  <div key={idx} className="p-4 rounded-xl bg-gray-950 border border-white/5 space-y-2 hover:border-white/10 hover:scale-[1.003] transition-all">
+                  <div key={idx} className="p-4 rounded-xl bg-theme-input-bg/60 border border-theme-border space-y-2 hover:border-theme-border/60 hover:scale-[1.003] transition-all">
                     <div className="flex justify-between items-start gap-3">
-                      <h4 className="text-sm font-bold text-white leading-relaxed font-display">
+                      <h4 className="text-sm font-bold text-theme-text-primary leading-relaxed font-display">
                         {idx + 1}. {q.question}
                       </h4>
                       <span className={`inline-flex items-center gap-1 text-[10px] uppercase font-bold px-2 py-0.5 rounded-full border shrink-0 ${
                         isCorrect 
-                          ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' 
-                          : 'text-rose-400 bg-rose-500/10 border-rose-500/20'
+                          ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border-emerald-500/20' 
+                          : 'text-rose-600 dark:text-rose-400 bg-rose-500/10 border-rose-500/20'
                       }`}>
                         {isCorrect ? 'Correct' : 'Incorrect'}
                       </span>
@@ -430,23 +430,23 @@ export default function QuizPlayer({ quiz, onExit }) {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs pt-1">
                       <div className={`p-2 rounded-lg ${
                         isCorrect 
-                          ? 'bg-emerald-500/5 text-emerald-300 border border-emerald-500/10' 
-                          : 'bg-rose-500/5 text-rose-300 border border-rose-500/10'
+                          ? 'bg-emerald-500/5 text-emerald-600 dark:text-emerald-300 border border-emerald-500/10' 
+                          : 'bg-rose-500/5 text-rose-600 dark:text-rose-300 border border-rose-500/10'
                       }`}>
-                        <span className="font-bold block text-[10px] text-gray-500 uppercase mb-0.5">Your Answer</span>
+                        <span className="font-bold block text-[10px] text-theme-text-muted uppercase mb-0.5">Your Answer</span>
                         {selected}
                       </div>
 
                       {!isCorrect && (
-                        <div className="p-2 rounded-lg bg-emerald-500/5 text-emerald-300 border border-emerald-500/10">
-                          <span className="font-bold block text-[10px] text-gray-500 uppercase mb-0.5">Correct Answer</span>
+                        <div className="p-2 rounded-lg bg-emerald-500/5 text-emerald-600 dark:text-emerald-300 border border-emerald-500/10">
+                          <span className="font-bold block text-[10px] text-theme-text-muted uppercase mb-0.5">Correct Answer</span>
                           {q.correctAnswer}
                         </div>
                       )}
                     </div>
 
                     {q.explanation && (
-                      <p className="text-xs text-gray-400 leading-relaxed bg-white/2 p-2 rounded-lg mt-2">
+                      <p className="text-xs text-theme-text-secondary leading-relaxed bg-theme-input-bg/30 p-2 rounded-lg mt-2">
                         <span className="font-bold text-indigo-400 mr-1">Explanation:</span>
                         {q.explanation}
                       </p>
@@ -458,16 +458,16 @@ export default function QuizPlayer({ quiz, onExit }) {
           </div>
 
           {/* Action Footer */}
-          <div className="flex gap-4 max-w-md mx-auto pt-6 border-t border-white/5">
+          <div className="flex gap-4 max-w-md mx-auto pt-6 border-t border-theme-border">
             <button
               onClick={handleRestart}
-              className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold text-sm transition-all cursor-pointer btn-active-scale"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-theme-glass-bg border border-theme-border hover:bg-theme-card-bg-hover text-theme-text-primary font-bold text-sm transition-all cursor-pointer btn-active-scale"
             >
               <RotateCcw className="w-4 h-4" /> Retake Quiz
             </button>
             <button
               onClick={onExit}
-              className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white font-bold text-sm shadow-lg shadow-indigo-650/15 transition-all cursor-pointer btn-active-scale"
+              className="flex-1 inline-flex items-center justify-center gap-2 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-lg shadow-indigo-600/10 transition-all cursor-pointer btn-active-scale"
             >
               <Home className="w-4 h-4" /> Dashboard
             </button>
