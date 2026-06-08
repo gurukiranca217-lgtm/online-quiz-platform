@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { UploadCloud, FileText, Check, Loader2, ArrowLeft } from 'lucide-react';
 
 export default function AiDocument({ onSave, onCancel }) {
@@ -17,31 +17,12 @@ export default function AiDocument({ onSave, onCancel }) {
     '⚡ Assembling and saving generated quiz...'
   ];
 
-  useEffect(() => {
-    let interval;
-    if (status === 'loading') {
-      setLoadingStep(0);
-      interval = setInterval(() => {
-        setLoadingStep(prev => {
-          if (prev < loadingMessages.length - 1) {
-            return prev + 1;
-          } else {
-            clearInterval(interval);
-            // Completed! Auto-generate questions and trigger save
-            handleAutoGenerateAndSave();
-            return prev;
-          }
-        });
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [status]);
 
   const handleAutoGenerateAndSave = () => {
     const filename = file ? file.name.toLowerCase() : '';
     let title = 'Quiz from ' + (file ? file.name.split('.')[0] : 'Document') + ` (${difficulty})`;
     
-    let pool = [];
+    let pool;
 
     if (filename.includes('science') || filename.includes('biology') || filename.includes('physics')) {
       pool = [
@@ -506,7 +487,11 @@ export default function AiDocument({ onSave, onCancel }) {
 
     // Sort by score descending and take the top 15 questions
     scoredPool.sort((a, b) => b.score - a.score);
-    const selectedQuestions = scoredPool.slice(0, 15).map(({ score, ...q }) => q);
+    const selectedQuestions = scoredPool.slice(0, 15).map(q => {
+      const rest = { ...q };
+      delete rest.score;
+      return rest;
+    });
 
     const finalQuiz = {
       id: 'ai_' + Date.now(),
@@ -520,6 +505,26 @@ export default function AiDocument({ onSave, onCancel }) {
 
     onSave(finalQuiz);
   };
+
+  useEffect(() => {
+    let interval;
+    if (status === 'loading') {
+      interval = setInterval(() => {
+        setLoadingStep(prev => {
+          if (prev < loadingMessages.length - 1) {
+            return prev + 1;
+          } else {
+            clearInterval(interval);
+            // Completed! Auto-generate questions and trigger save
+            handleAutoGenerateAndSave();
+            return prev;
+          }
+        });
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   const handleDragOver = (e) => {
     e.preventDefault();
@@ -556,6 +561,7 @@ export default function AiDocument({ onSave, onCancel }) {
 
   const handleStartGeneration = () => {
     if (!file) return;
+    setLoadingStep(0);
     setStatus('loading');
   };
 

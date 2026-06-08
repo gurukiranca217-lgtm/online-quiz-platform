@@ -1,4 +1,3 @@
-import React from 'react';
 import { PenTool, Sparkles, Shuffle, Users } from 'lucide-react';
 
 export default function ActionCards({ activeCard, onSelectCard }) {

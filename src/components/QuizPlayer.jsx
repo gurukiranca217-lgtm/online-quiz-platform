@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Check, X, Award, RotateCcw, Home, ChevronRight, HelpCircle, FileText } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, X, Award, RotateCcw, Home, ChevronRight, FileText } from 'lucide-react';
 import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 

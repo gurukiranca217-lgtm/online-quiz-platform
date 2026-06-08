@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Users, UserPlus, Play, X, Clipboard, ArrowLeft, Shield, User, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Users, UserPlus, Play, Clipboard, ArrowLeft, Shield, Loader2 } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import ManualCreator from './ManualCreator';
 import AiDocument from './AiDocument';

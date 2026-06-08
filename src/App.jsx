@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { BookOpen, Sparkles, Plus, Play, Trash2, Clock, CheckCircle, BarChart3, Database } from 'lucide-react';
+/* eslint-disable react-hooks/set-state-in-effect */
+import { useState, useEffect } from 'react';
+import { BookOpen, Sparkles, Plus, Play, Trash2, Clock, BarChart3, Database } from 'lucide-react';
 import ActionCards from './components/ActionCards';
 import ManualCreator from './components/ManualCreator';
 import AiDocument from './components/AiDocument';
@@ -107,7 +108,7 @@ export default function App() {
         day: 'numeric',
         year: 'numeric'
       });
-    } catch (_) {
+    } catch {
       return 'Recent';
     }
   };
