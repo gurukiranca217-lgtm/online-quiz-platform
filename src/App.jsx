@@ -297,7 +297,7 @@ export default function App() {
                     </p>
                     <button
                       onClick={() => handleSelectCard('manual')}
-                      className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-650 hover:bg-indigo-600 text-white font-bold text-sm transition-all cursor-pointer shadow-lg shadow-indigo-650/10 btn-active-scale"
+                      className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm transition-all cursor-pointer shadow-lg shadow-indigo-600/10 btn-active-scale"
                     >
                       <Plus className="w-4 h-4" /> Create First Quiz
                     </button>
