@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Check, X, Award, RotateCcw, Home, ChevronRight, HelpCircle, FileText } from 'lucide-react';
+import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export default function QuizPlayer({ quiz, onExit }) {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -14,33 +16,22 @@ export default function QuizPlayer({ quiz, onExit }) {
     if (quiz.type !== 'room' && !quiz.id?.startsWith('room_')) return;
 
     const roomCode = quiz.id.replace('room_', '');
-    const channel = new BroadcastChannel('quizverse_multiplayer');
+    const roomRef = doc(db, 'rooms', roomCode);
 
-    const fetchLatestScores = () => {
-      const scoresKey = 'quizverse_scores_' + roomCode;
-      let storedScores = {};
-      try {
-        const stored = localStorage.getItem(scoresKey);
-        if (stored) {
-          storedScores = JSON.parse(stored);
-        }
-      } catch (e) {
-        console.error(e);
-      }
+    const unsubscribe = onSnapshot(roomRef, (snapshot) => {
+      if (!snapshot.exists()) return;
 
-      const roster = quiz.roomPlayers || [];
+      const data = snapshot.data();
+      const roster = data.players || [];
       const updatedLeaderboard = roster.map(player => {
-        // Determine if player matches local user
         const isMe = player.id === 'host' 
           ? (quiz.myNickname === 'You (Host)') 
           : (player.name === quiz.myNickname);
 
-        const pScore = storedScores[player.id] !== undefined ? storedScores[player.id] : -1;
-
         return {
           name: isMe && !player.name.endsWith(' (You)') ? `${player.name} (You)` : player.name,
           id: player.id,
-          score: pScore,
+          score: player.score !== undefined ? player.score : -1,
           color: player.avatarColor || 'bg-gray-600',
           isMe
         };
@@ -49,27 +40,10 @@ export default function QuizPlayer({ quiz, onExit }) {
       // Sort: completed scores first (highest to lowest), then pending players (-1)
       updatedLeaderboard.sort((a, b) => b.score - a.score);
       setLeaderboard(updatedLeaderboard);
-    };
-
-    channel.onmessage = (event) => {
-      const { type, payload } = event.data;
-      if (payload && payload.roomCode === roomCode && type === 'SCORE_SUBMIT') {
-        fetchLatestScores();
-      }
-    };
-
-    const handleStorageChange = (e) => {
-      if (e.key === 'quizverse_scores_' + roomCode) {
-        fetchLatestScores();
-      }
-    };
-    window.addEventListener('storage', handleStorageChange);
-
-    fetchLatestScores();
+    });
 
     return () => {
-      channel.close();
-      window.removeEventListener('storage', handleStorageChange);
+      unsubscribe();
     };
   }, [quiz]);
 
@@ -107,34 +81,38 @@ export default function QuizPlayer({ quiz, onExit }) {
 
       if (quiz.type === 'room' || quiz.id?.startsWith('room_')) {
         const roomCode = quiz.id.replace('room_', '');
-        const scoresKey = 'quizverse_scores_' + roomCode;
-        
-        let storedScores = {};
-        try {
-          const stored = localStorage.getItem(scoresKey);
-          if (stored) {
-            storedScores = JSON.parse(stored);
-          }
-        } catch (e) {
-          console.error(e);
-        }
-        
-        // Identify local player ID
-        const myPlayer = quiz.roomPlayers?.find(p => {
-          return p.id === 'host' ? (quiz.myNickname === 'You (Host)') : (p.name === quiz.myNickname);
-        });
-        const myId = myPlayer ? myPlayer.id : 'unknown';
-        
-        storedScores[myId] = finalScore;
-        localStorage.setItem(scoresKey, JSON.stringify(storedScores));
+        const roomRef = doc(db, 'rooms', roomCode);
 
-        // Broadcast score update to other players
-        const channel = new BroadcastChannel('quizverse_multiplayer');
-        channel.postMessage({
-          type: 'SCORE_SUBMIT',
-          payload: { roomCode, playerId: myId, score: finalScore }
-        });
-        channel.close();
+        const updateScoreInDb = async () => {
+          try {
+            const roomSnap = await getDoc(roomRef);
+            if (!roomSnap.exists()) return;
+
+            const roomData = roomSnap.data();
+            const currentPlayers = roomData.players || [];
+
+            // Identify local player ID
+            const myPlayer = quiz.roomPlayers?.find(p => {
+              return p.id === 'host' ? (quiz.myNickname === 'You (Host)') : (p.name === quiz.myNickname);
+            });
+            const myId = myPlayer ? myPlayer.id : 'unknown';
+
+            const updatedPlayers = currentPlayers.map(p => {
+              if (p.id === myId) {
+                return { ...p, score: finalScore };
+              }
+              return p;
+            });
+
+            await updateDoc(roomRef, {
+              players: updatedPlayers
+            });
+          } catch (err) {
+            console.error("Error updating player score in db:", err);
+          }
+        };
+
+        updateScoreInDb();
       } else {
         const simulatedSoloPlayers = [
           { name: 'TriviaMaster', score: totalQ, color: 'bg-indigo-500' },

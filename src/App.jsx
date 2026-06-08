@@ -23,8 +23,12 @@ export default function App() {
     const params = new URLSearchParams(window.location.search);
     const roomParam = params.get('room');
     if (roomParam) {
-      setInitialJoinCode(roomParam);
-      setView('room-lobby');
+      // Sanitize roomParam: trim spaces, convert to uppercase, strip non-alphanumeric
+      const cleaned = roomParam.trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (cleaned.length === 6) {
+        setInitialJoinCode(cleaned);
+        setView('room-lobby');
+      }
       // Remove parameter from URL without refreshing
       window.history.replaceState({}, document.title, window.location.pathname);
     }

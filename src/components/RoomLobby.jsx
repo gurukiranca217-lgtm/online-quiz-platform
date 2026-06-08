@@ -4,6 +4,8 @@ import { QRCodeSVG } from 'qrcode.react';
 import ManualCreator from './ManualCreator';
 import AiDocument from './AiDocument';
 import SurpriseMeModal from './SurpriseMeModal';
+import { doc, setDoc, getDoc, updateDoc, onSnapshot, serverTimestamp } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, onCancel }) {
   const [lobbyView, setLobbyView] = useState(initialJoinCode ? 'join' : 'landing'); // landing, host, join, lobby
@@ -17,6 +19,15 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
   const [countdown, setCountdown] = useState(null);
   const [myPlayerId, setMyPlayerId] = useState(null);
   const [isConnecting, setIsConnecting] = useState(false);
+  const [joinError, setJoinError] = useState('');
+  const [toastMsg, setToastMsg] = useState('');
+
+  const showToast = (msg) => {
+    setToastMsg(msg);
+    setTimeout(() => {
+      setToastMsg('');
+    }, 3000);
+  };
 
   // Default preloaded room quiz
   const [selectedRoomQuiz, setSelectedRoomQuiz] = useState({
@@ -56,12 +67,6 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
     ]
   });
 
-  // Keep a ref of the latest state to avoid stale closures in the BroadcastChannel callbacks
-  const stateRef = useRef({ isHost, roomCode, players, selectedRoomQuiz, nickname, myPlayerId });
-  useEffect(() => {
-    stateRef.current = { isHost, roomCode, players, selectedRoomQuiz, nickname, myPlayerId };
-  });
-
   // Generate 6-digit room code
   const generateRoomCode = () => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -72,168 +77,158 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
     return result;
   };
 
-  const handleCreateRoom = () => {
+  const handleCreateRoom = async () => {
     const code = generateRoomCode();
     setRoomCode(code);
     setIsHost(true);
-    // Clear existing scores in localStorage for this room code
+    setJoinError('');
     localStorage.removeItem('quizverse_scores_' + code);
-    setPlayers([{ name: 'You (Host)', id: 'host', avatarColor: 'bg-indigo-500' }]);
+    
+    const initialPlayers = [{ name: 'You (Host)', id: 'host', avatarColor: 'bg-indigo-500', score: -1 }];
+    setPlayers(initialPlayers);
     setLobbyView('lobby');
+
+    try {
+      await setDoc(doc(db, 'rooms', code), {
+        roomCode: code,
+        status: 'waiting',
+        hostId: 'host',
+        quiz: selectedRoomQuiz,
+        players: initialPlayers,
+        createdAt: serverTimestamp()
+      });
+    } catch (err) {
+      console.error(err);
+      setJoinError('Failed to create room in database. Please check your connection.');
+    }
   };
 
-  const handleJoinSubmit = (e) => {
+  const handleJoinSubmit = async (e) => {
     e.preventDefault();
-    const enteredCode = joinCodeInput.toUpperCase().trim();
+    setJoinError('');
+    const enteredCode = joinCodeInput.toUpperCase().trim().replace(/[^A-Z0-9]/g, '');
     if (!enteredCode || enteredCode.length !== 6) {
-      alert('Please enter a valid 6-digit room code.');
+      setJoinError('Please enter a valid 6-digit room code.');
       return;
     }
     if (!nickname.trim()) {
-      alert('Please enter a nickname.');
+      setJoinError('Please enter a nickname.');
       return;
     }
 
     setIsConnecting(true);
     const guestId = 'guest_' + Date.now();
-    
-    // Clear existing scores in localStorage for this room code
     localStorage.removeItem('quizverse_scores_' + enteredCode);
 
-    // Verify room/host existence via real-time BroadcastChannel ping-pong
-    const tempChannel = new BroadcastChannel('quizverse_multiplayer');
-    let hasResponded = false;
+    try {
+      const roomRef = doc(db, 'rooms', enteredCode);
+      const roomSnap = await getDoc(roomRef);
 
-    tempChannel.onmessage = (event) => {
-      const { type, payload } = event.data;
-      if (payload && payload.roomCode === enteredCode && type === 'HOST_PONG') {
-        hasResponded = true;
-        tempChannel.close();
+      if (!roomSnap.exists()) {
+        setJoinError(`No active room found with code "${enteredCode}". Please check the code or ensure the Host is in the lobby.`);
         setIsConnecting(false);
-
-        // Host exists! Now proceed to join.
-        setRoomCode(enteredCode);
-        setIsHost(false);
-        setNickname(nickname.trim());
-        setMyPlayerId(guestId);
-
-        // Set fallback roster while waiting for host's official broadcast
-        const guestPlayers = [
-          { name: 'Host', id: 'host', avatarColor: 'bg-indigo-500' },
-          { name: nickname.trim() + ' (You)', id: guestId, avatarColor: 'bg-emerald-500' }
-        ];
-        setPlayers(guestPlayers);
-
-        // Request join from Host
-        const joinChannel = new BroadcastChannel('quizverse_multiplayer');
-        joinChannel.postMessage({
-          type: 'JOIN_REQUEST',
-          payload: { roomCode: enteredCode, nickname: nickname.trim(), playerId: guestId }
-        });
-        joinChannel.close();
-
-        setLobbyView('lobby');
+        return;
       }
-    };
 
-    // Send ping to Host
-    tempChannel.postMessage({
-      type: 'PING_HOST',
-      payload: { roomCode: enteredCode }
-    });
-
-    // Timeout if Host does not respond
-    setTimeout(() => {
-      if (!hasResponded) {
-        tempChannel.close();
+      const roomData = roomSnap.data();
+      if (roomData.status !== 'waiting') {
+        setJoinError(`Room "${enteredCode}" is already in progress.`);
         setIsConnecting(false);
-        alert(`No active room found with code "${enteredCode}". Please verify the code or ensure the Host is waiting in the lobby.`);
+        return;
       }
-    }, 1500);
+
+      const currentPlayers = roomData.players || [];
+      if (currentPlayers.length >= 6) {
+        setJoinError(`Room "${enteredCode}" is full (maximum 6 players).`);
+        setIsConnecting(false);
+        return;
+      }
+
+      const colors = ['bg-blue-500', 'bg-purple-500', 'bg-pink-500', 'bg-amber-500', 'bg-rose-500', 'bg-violet-500'];
+      const color = colors[Math.floor(Math.random() * colors.length)];
+      const newPlayer = {
+        name: nickname.trim(),
+        id: guestId,
+        avatarColor: color,
+        score: -1
+      };
+
+      const updatedPlayers = [...currentPlayers, newPlayer];
+
+      await updateDoc(roomRef, {
+        players: updatedPlayers
+      });
+
+      setRoomCode(enteredCode);
+      setIsHost(false);
+      setNickname(nickname.trim());
+      setMyPlayerId(guestId);
+      setPlayers(updatedPlayers);
+      setLobbyView('lobby');
+    } catch (err) {
+      console.error(err);
+      setJoinError('Connection error. Failed to join room.');
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
-  // Real-time synchronization using persistent BroadcastChannel
+  // Sync lobby states and game countdown status via Firestore real-time snapshots
   useEffect(() => {
     if (!roomCode) return;
 
-    const channel = new BroadcastChannel('quizverse_multiplayer');
+    const roomRef = doc(db, 'rooms', roomCode);
+    const unsubscribe = onSnapshot(roomRef, (snapshot) => {
+      if (!snapshot.exists()) return;
 
-    channel.onmessage = (event) => {
-      const { type, payload } = event.data;
-      const { isHost: curIsHost, roomCode: curRoomCode, selectedRoomQuiz: curQuiz, myPlayerId: curMyId } = stateRef.current;
+      const data = snapshot.data();
 
-      if (!payload || payload.roomCode !== curRoomCode) return;
+      if (data.quiz) {
+        setSelectedRoomQuiz(data.quiz);
+      }
 
-      if (curIsHost) {
-        if (type === 'PING_HOST') {
-          channel.postMessage({
-            type: 'HOST_PONG',
-            payload: { roomCode: curRoomCode, hostId: 'host', quiz: curQuiz }
-          });
-        } else if (type === 'JOIN_REQUEST') {
-          setPlayers(prev => {
-            if (prev.some(p => p.id === payload.playerId)) return prev;
-
-            const colors = ['bg-blue-500', 'bg-purple-500', 'bg-pink-500', 'bg-amber-500', 'bg-rose-500', 'bg-violet-500'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            const updated = [...prev, { name: payload.nickname, id: payload.playerId, avatarColor: color }];
-
-            // Broadcast updated roster to everyone
-            channel.postMessage({
-              type: 'LOBBY_UPDATE',
-              payload: { roomCode: curRoomCode, players: updated, quiz: curQuiz }
-            });
-            return updated;
-          });
-        }
-      } else {
-        // If we are a guest
-        if (type === 'LOBBY_UPDATE') {
-          if (payload.players) {
-            // Map roster to highlight current guest client with "(You)"
-            const mapped = payload.players.map(p => {
-              if (p.id === 'host') {
-                return { ...p, name: 'Host' };
-              }
-              if (p.id === curMyId) {
-                return { ...p, name: p.name.endsWith(' (You)') ? p.name : p.name + ' (You)' };
-              }
-              return p;
-            });
-            setPlayers(mapped);
+      if (data.players) {
+        const mapped = data.players.map(p => {
+          if (p.id === 'host') {
+            return { ...p, name: 'Host' };
           }
-          if (payload.quiz) {
-            setSelectedRoomQuiz(payload.quiz);
+          if (p.id === myPlayerId) {
+            return { ...p, name: p.name.endsWith(' (You)') ? p.name : p.name + ' (You)' };
           }
-        } else if (type === 'START_MATCH') {
-          setCountdown(3);
-        }
+          return p;
+        });
+        setPlayers(mapped);
+      }
+
+      if (data.status === 'countdown' && countdown === null) {
+        setCountdown(3);
+      }
+    }, (error) => {
+      console.error("Firestore onSnapshot error:", error);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [roomCode, myPlayerId, countdown]);
+
+  // Host updates quiz selection in Firestore
+  useEffect(() => {
+    if (!isHost || !roomCode || !selectedRoomQuiz) return;
+
+    const updateRoomQuiz = async () => {
+      try {
+        const roomRef = doc(db, 'rooms', roomCode);
+        await updateDoc(roomRef, {
+          quiz: selectedRoomQuiz
+        });
+      } catch (error) {
+        console.error("Error updating room quiz:", error);
       }
     };
 
-    return () => {
-      channel.close();
-    };
-  }, [roomCode]);
-
-  // Periodic broadcast of lobby updates from Host to catch up late joiners
-  useEffect(() => {
-    if (!isHost || !roomCode) return;
-
-    const channel = new BroadcastChannel('quizverse_multiplayer');
-    const syncInterval = setInterval(() => {
-      const { roomCode: curRoomCode, players: curPlayers, selectedRoomQuiz: curQuiz } = stateRef.current;
-      channel.postMessage({
-        type: 'LOBBY_UPDATE',
-        payload: { roomCode: curRoomCode, players: curPlayers, quiz: curQuiz }
-      });
-    }, 1500);
-
-    return () => {
-      channel.close();
-      clearInterval(syncInterval);
-    };
-  }, [isHost, roomCode]);
+    updateRoomQuiz();
+  }, [selectedRoomQuiz, isHost, roomCode]);
 
   // Sync host starting game countdown logic
   useEffect(() => {
@@ -260,20 +255,23 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
     return () => clearTimeout(timer);
   }, [countdown]);
 
-
   const copyToClipboard = () => {
     navigator.clipboard.writeText(roomCode);
-    alert('Room code copied to clipboard!');
+    showToast('Room code copied to clipboard!');
   };
 
-  const handleStartMatch = () => {
-    setCountdown(3);
-    const channel = new BroadcastChannel('quizverse_multiplayer');
-    channel.postMessage({
-      type: 'START_MATCH',
-      payload: { roomCode }
-    });
-    channel.close();
+  const handleStartMatch = async () => {
+    if (!roomCode) return;
+    try {
+      const roomRef = doc(db, 'rooms', roomCode);
+      await updateDoc(roomRef, {
+        status: 'countdown'
+      });
+      setCountdown(3);
+    } catch (err) {
+      console.error(err);
+      setJoinError('Failed to start the match in database.');
+    }
   };
 
   // Sub-routing for nested creation options inside the lobby
@@ -441,6 +439,11 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
           </div>
 
           <form onSubmit={handleJoinSubmit} className="space-y-5 text-left">
+            {joinError && (
+              <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold leading-relaxed animate-fade-in text-center">
+                ⚠️ {joinError}
+              </div>
+            )}
             <div>
               <label className="block text-xs font-bold text-theme-text-muted uppercase tracking-wider mb-2">6-Digit Room Code</label>
               <input
@@ -502,7 +505,7 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
                   onClick={() => {
                     const link = `${window.location.origin}/?room=${roomCode}`;
                     navigator.clipboard.writeText(link);
-                    alert('Direct join link copied to clipboard!');
+                    showToast('Direct join link copied!');
                   }}
                   className="text-xs text-indigo-400 hover:text-indigo-300 underline font-semibold transition-colors cursor-pointer"
                 >
@@ -654,6 +657,12 @@ export default function RoomLobby({ savedQuizzes, initialJoinCode, onStartQuiz, 
           }}
           onClose={() => setShowSurprise(false)}
         />
+      )}
+
+      {toastMsg && (
+        <div className="fixed bottom-6 right-6 z-50 glass-panel border border-emerald-500/20 bg-emerald-500/10 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2 animate-fade-in font-semibold text-xs">
+          <span>✅</span> {toastMsg}
+        </div>
       )}
     </div>
   );
